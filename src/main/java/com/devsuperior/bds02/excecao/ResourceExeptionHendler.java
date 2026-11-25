@@ -11,8 +11,28 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExeptionHendler {
 
+
+
+    @ExceptionHandler(ResouceNotFoundException.class)
+    public ResponseEntity<StandardException> resourceNotFoundException(ResouceNotFoundException e, HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        StandardException err = new StandardException();
+
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Id nao Encontrado");
+        err.setMenssagem(e.getMessage());
+        err.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+
+
+    }
+
     @ExceptionHandler(DatabaseException.class)
-    public ResponseEntity<StandardException> databaseException(DatabaseException e , HttpServletRequest request){
+    public ResponseEntity<StandardException> databaseException(DatabaseException e , HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         StandardException err = new StandardException();
@@ -24,6 +44,6 @@ public class ResourceExeptionHendler {
         err.setPath(request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
-
+    }
 
 }
